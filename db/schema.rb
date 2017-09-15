@@ -10,9 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20170915132629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "influencers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "website_url"
+    t.string   "instagram_url"
+    t.string   "youtube_url"
+    t.string   "facebook_url"
+    t.string   "twitter_url"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "image"
+  end
+
+  create_table "outfit_tags", force: :cascade do |t|
+    t.integer  "tag_id"
+    t.integer  "outfit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outfit_id"], name: "index_outfit_tags_on_outfit_id", using: :btree
+    t.index ["tag_id"], name: "index_outfit_tags_on_tag_id", using: :btree
+  end
+
+  create_table "outfits", force: :cascade do |t|
+    t.string   "name"
+    t.string   "image"
+    t.integer  "influencer_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["influencer_id"], name: "index_outfits_on_influencer_id", using: :btree
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "outfit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outfit_id"], name: "index_tags_on_outfit_id", using: :btree
+  end
+
+  create_table "trends", force: :cascade do |t|
+    t.string   "image"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "outfit_tags", "outfits"
+  add_foreign_key "outfit_tags", "tags"
+  add_foreign_key "outfits", "influencers"
+  add_foreign_key "tags", "outfits"
 end
